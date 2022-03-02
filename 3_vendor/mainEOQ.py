@@ -79,7 +79,7 @@ vd2.nhap(pr, "vendor2")
 vd3.nhap(pr, "vendor3")
 str1 = ''
 
-for i in range(10, 21):  # vòng lăp chính
+for i in range(10, 46):  # vòng lăp chính
     str1 = loop(i)
     print(str1)
     x = np.append(x, i)  # thêm T vào mảng trục x

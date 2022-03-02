@@ -67,32 +67,32 @@ class Vendor1:
     def q(self, T, i):
         return self.ti(T, i) * self.__D
 
-    def THC1(self, T, i):
+    def TCH(self, T, i):
         return (self.__H * self.q(T, i) * T)/2
 
-    def TSC1(self):
+    def TCS1(self):
         return self.__pr.getA()
 
-    def TOC(self):
+    def TCO(self):
         return self.__O * self.__x
 
-    def TSC2(self):
+    def TCS2(self):
         return self.__a * (1 - self.__x)
 
-    def THC2(self, T, i):
+    def TCh(self, T, i):
         I = (self.q(T, i)*(i-1))/2
         THC21 = ((self.__bv*self.q(T, i)*T)/2)*(1-self.__x)
         THC22 = self.__bv*I*T*self.__x
         return THC21+THC22
 
-    def TPC2(self, T, i):
+    def TCP2(self, T, i):
         a = 0
         if self.q(T, i) <= self.__U:
             return int(a)
         elif self.q(T, i) > self.__U:
             return (i * ((self.q(T, i) - self.__U) * (self.q(T, i) - self.__U)) * self.__pi) / (2 * self.__D)
 
-    def TRC(self, T, i):
+    def TCD(self, T, i):
         cpm = self.__pr.getCpm()
         cps = self.__pr.getCps()
         cm = self.__pr.getCm()
