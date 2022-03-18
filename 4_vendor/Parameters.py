@@ -40,7 +40,7 @@ class Parameters:
         str1 = f.readline()
         self.__Cm = int(str1[str1.rfind(' ') + 1:])
         str1 = f.readline()
-        self.__Cpb = int(str1[str1.rfind(' ') + 1:])
+        self.__Cb = int(str1[str1.rfind(' ') + 1:])
 
     def hienthi(self):
         print("A: {}, Cps: {}, Cpm: {}, Cpb: {}, Cs: {}, Cm: {}, Cb: {}".format(

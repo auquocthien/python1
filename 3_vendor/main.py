@@ -10,6 +10,8 @@ def some_thing(str, arr, list, x, y):
     arr = np.append(arr, a)
     return arr
 # ghi du lieu vao file txt
+
+
 def showinfile(T, i, j, k, q1, q2, q3, TCH, TCh, TCO, TCP2, TCD, TSC1, TCS2, TCp):
     f = open("dataout/loop %s.txt" % T, "a")  # tạo file txt ứng với mỗi vòng lặp
     str1 = ''  # khai báo chuỗi rỗng

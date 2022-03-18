@@ -56,9 +56,9 @@ class Vendor:
 
     def hienthi(self):
         if self.__x == 0:
-            print("D:{}, bv:{}, pi:{}, a:{}, H:{}, U:{}".format(self.__D, self.__bv, self.__pi, self.__a, self.__H, self.__U))
+            print("D:{}, bv:{}, pi:{}, a:{}, H:{}, U:{}, x:{}".format(self.__D, self.__bv, self.__pi, self.__a, self.__H, self.__U, self.__x))
         elif self.__x == 1:
-            print("D:{}, bv:{}, pi:{}, O:{}, H:{}, U:{}".format(self.__D, self.__bv, self.__pi, self.__O, self.__H, self.__U))
+            print("D:{}, bv:{}, pi:{}, O:{}, H:{}, U:{}, x:{}".format(self.__D, self.__bv, self.__pi, self.__O, self.__H, self.__U, self.__x))
 
     @staticmethod
     def ti(T, i):
@@ -80,10 +80,10 @@ class Vendor:
         return self.__a * (1 - self.__x)
 
     def TCh(self, T, i):
-        I = (self.q(T, i)*(i-1))/2
-        THC21 = ((self.__bv*self.q(T, i)*T)/2)*(1-self.__x)
-        THC22 = self.__bv*I*T*self.__x
-        return THC21+THC22
+        I = (self.q(T, i) * (i - 1)) / 2
+        TCh1 = ((self.__bv * self.q(T, i) * T)/2) * (1 - self.__x)
+        TCh2 = self.__bv * I * T * self.__x
+        return TCh1 + TCh2
 
     def TCP2(self, T, i):
         a = 0
@@ -92,39 +92,76 @@ class Vendor:
         elif self.q(T, i) > self.__U:
             return (i * ((self.q(T, i) - self.__U) * (self.q(T, i) - self.__U)) * self.__pi) / (2 * self.__D)
 
-    def TCD(self, T, i):
+    def TCD(self, T, ni):
         cpm = self.__pr.getCpm()
         cps = self.__pr.getCps()
+        cpb = self.__pr.getCpb()
         cm = self.__pr.getCm()
         cs = self.__pr.getCs()
-        qi = self.q(T, i)
+        cb = self.__pr.getCb()
+        qi = self.q(T, ni)
         tci = 0
-        r = qi % cpm
-        if r > 2*cps:
-            tci = (qi//cpm) * cm + cm
-        if cps < r <= 2*cps:
-            tci = (qi//cpm) * cm + 2*cs
-        if 0 < r <= cps:
-            tci = (qi//cpm) * cm + cs
-        if r == 0:
-            tci = (qi//cpm) * cm
-        return i*tci
+        r1 = qi % cpb
+        r2 = qi % cpm
+        if qi > 2 * cpm:
+            if 0 < r1 <= cps:
+                tci = (qi // cpb) * cb + cs
+            if cps < r1 <= (2 * cps):
+                tci = (qi // cpb) * cb + 2 * cs
+            if (2 * cps) < r1 <= cpm:
+                tci = (qi // cpb) * cb + cm
+            if cpm < r1 <= (cpm + cps):
+                tci = (qi // cpb) * cb + cm + cs
+            if (cpm + cps) < r1 <= (cpm + 2 * cps):
+                tci = (qi // cpb) * cb + cm + 2 * cs
+            if (cpm + 2 * cps) < r1 <= (2 * cpm):
+                tci = (qi // cpb) * cb + 2 * cm
+            if r1 == 0:
+                tci = (qi // cpb) * cb
+            if (2 * cpm) < r1 < cpb:
+                tci = (qi // cpb) * cb + cb
+        elif 0 <= qi <= (2 * cpm):
+            if 2 * cps < r2 <= cpm:
+                tci = (qi // cpm) * cm + cm
+            if cps < r2 <= (2 * cps):
+                tci = (qi // cpm) * cm + 2 * cs
+            if 0 < r2 <= cps:
+                tci = (qi // cpm) * cm + cs
+            if r2 == 0:
+                tci = cm
+        return ni * tci
 
-    def tci(self, T, i):
-        cpm = self.__pr.getCpm()
-        cps = self.__pr.getCps()
-        cm = self.__pr.getCm()
-        cs = self.__pr.getCs()
-        qi = self.q(T, i)
-        s = 0
-        r = qi % cpm
-        if r > 2 * cps:
-            s = (qi // cpm) * cm + cm
-        if cps < r <= 2 * cps:
-            s = (qi // cpm) * cm + 2 * cs
-        if r <= cps:
-            s = (qi // cpm) * cm + cs
-        if r == 0:
-            s = cm
-        return s
-
+    # def TCD(self, T, i):
+    #     cpm = self.__pr.getCpm()
+    #     cps = self.__pr.getCps()
+    #     cpb = self.__pr.getCpb()
+    #     cm = self.__pr.getCm()
+    #     cs = self.__pr.getCs()
+    #     cb = self.__pr.getCb()
+    #     qi = self.q(T, i)
+    #     tci = 0
+    #     r1 = qi % cpb
+    #     r2 = qi % cpm
+    #     if qi >= cpb:
+    #         if 0 < r1 < cps:
+    #             tci = (qi // cpb) * cb + cs
+    #         if cps < r1 <= 2 * cps:
+    #             tci = (qi // cpb) * cb + 2 * cs
+    #         if 2 * cps < r1 < cpm:
+    #             tci = (qi // cpb) * cb + cm
+    #         if cpm < r1 <= 2 * cpm:
+    #             tci = (qi // cpb) * cb + 2 * cm
+    #         if r1 == 0:
+    #             tci = (qi // cpb) * cb
+    #         if r1 > 2 * cpm:
+    #             tci = (qi // cpb) * cb + cb
+    #     elif 0 <= qi < cpb:
+    #         if 2 * cps < r2 <= cpm:
+    #             tci = (qi // cpm) * cm + cm
+    #         if cps < r2 <= 2 * cps:
+    #             tci = (qi // cpm) * cm + 2 * cs
+    #         if 0 < r2 <= cps:
+    #             tci = (qi // cpm) * cm + cs
+    #         if r2 == 0:
+    #             tci = cm
+    #     return i * tci

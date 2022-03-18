@@ -10,13 +10,14 @@ def some_thing(str, arr, list, x, y):
     arr = np.append(arr, a)
     return arr
 
+
 # ghi du lieu vao file txt
 
 
-def showinfile(T, i, j, k, l, q1, q2, q3, q4, TCH, TCh, TCO, TCP2, TCD, TCS1, TCS2, TCp):
-    f = open("dataout/loop %s.txt" % T, "a")  # tạo file txt ứng với mỗi vòng lặp
+def showinfile(T, i, j, k, L, q1, q2, q3, q4, TCH, TCh, TCO, TCP2, TCD, TCS1, TCS2, TCp):
+    f = open("dataoutVMI/loop %s.txt" % T, "a")  # tạo file txt ứng với mỗi vòng lặp
     str1 = ''  # khai báo chuỗi rỗng
-    arr = np.array([T, i, j, k, l, q1, q2, q3, q4, TCH, TCh, TCO, TCP2, TCD, TCS1, TCS2, TCp])  # khai báo mảng
+    arr = np.array([T, i, j, k, L, q1, q2, q3, q4, TCH, TCh, TCO, TCP2, TCD, TCS1, TCS2, TCp])  # khai báo mảng
     for i in arr:
         str1 += str(i) + ": "  # chuyển từ số sang chuỗi r cộng vào chuỗi
     f.write(str1 + "\n")
@@ -35,27 +36,27 @@ def loop(T):
     for i in range(1, T + 1):
         for j in range(1, T + 1):
             for k in range(1, T + 1):
-                for l in range(1, T + 1):
+                for L in range(1, T + 1):
                     q1 = round(vd1.q(T, i))
                     q2 = round(vd2.q(T, j))
                     q3 = round(vd3.q(T, k))
-                    q4 = round(vd4.q(T, l))
-                    TCH = round((vd1.TCH(T, i) + vd2.TCH(T, j) + vd3.TCH(T, k) + vd4.TCH(T, l)) / T)
-                    TCh = round((vd1.TCh(T, i) + vd2.TCh(T, j) + vd3.TCh(T, k) + vd4.TCh(T, l)) / T)
+                    q4 = round(vd4.q(T, L))
+                    TCH = round((vd1.TCH(T, i) + vd2.TCH(T, j) + vd3.TCH(T, k) + vd4.TCH(T, L)) / T)
+                    TCh = round((vd1.TCh(T, i) + vd2.TCh(T, j) + vd3.TCh(T, k) + vd4.TCh(T, L)) / T)
                     TCO = round((vd1.TCO() + vd2.TCO() + vd3.TCO() + vd4.TCO()) / T)
-                    TCP2 = round((vd1.TCP2(T, i) + vd2.TCP2(T, j) + vd3.TCP2(T, k) + vd4.TCP2(T, l)) / T)
-                    TCD = round((vd1.TCD(T, i) + vd2.TCD(T, j) + vd3.TCD(T, k) + vd4.TCD(T, l)) / T)
-                    TCS1 = round((pr.getA()) / T)
+                    TCP2 = round((vd1.TCP2(T, i) + vd2.TCP2(T, j) + vd3.TCP2(T, k) + vd4.TCP2(T, L)) / T)
+                    TCD = round((vd1.TCD(T, i) + vd2.TCD(T, j) + vd3.TCD(T, k) + vd4.TCD(T, L)) / T)
+                    TCS1 = round(pr.getA() / T)
                     TCS2 = round((vd1.TCS2() + vd2.TCS2() + vd3.TCS2() + vd4.TCS2()) / T)
                     TCp = round(TCH + TCh + TCO + TCP2 + TCD + TCS1 + TCS2)
-                    #điều kiện lọc
+                    # điều kiện lọc
                     if TCp < mintcp:
                         mintcp = TCp
                         arr1 = np.append(arr1, T)
                         arr1 = np.append(arr1, i)
                         arr1 = np.append(arr1, j)
                         arr1 = np.append(arr1, k)
-                        arr1 = np.append(arr1, l)
+                        arr1 = np.append(arr1, L)
                         arr1 = np.append(arr1, q1)
                         arr1 = np.append(arr1, q2)
                         arr1 = np.append(arr1, q3)
@@ -69,7 +70,7 @@ def loop(T):
                         arr1 = np.append(arr1, TCS2)
                         arr1 = np.append(arr1, TCp)
                         arr2 = np.append(arr2, TCp)
-                    showinfile(T, i, j, k, l, q1, q2, q3, q4, TCh, TCH, TCO, TCP2, TCD, TCS1, TCS2, TCp)
+                        # showinfile(T, i, j, k, L, q1, q2, q3, q4, TCh, TCH, TCO, TCP2, TCD, TCS1, TCS2, TCp)
     arr1 = arr1[-17:]
     y = np.append(y, min(arr2))  # them tcp nhỏ nhất vào mảng trục y
     for i in arr1:
@@ -88,7 +89,11 @@ vd1.nhap(pr, "Vendor1")
 vd2.nhap(pr, "vendor2")
 vd3.nhap(pr, "vendor3")
 vd4.nhap(pr, "vendor4")
-
+pr.hienthi()
+vd1.hienthi()
+vd2.hienthi()
+vd3.hienthi()
+vd4.hienthi()
 str1 = ''
 
 best_result = 9999999
@@ -102,7 +107,7 @@ TCD = np.array([], dtype='i')
 TCS1 = np.array([], dtype='i')
 TCS2 = np.array([], dtype='i')
 
-for i in range(10, 21):  # vòng lăp chính
+for i in range(10, 45):  # vòng lăp chính
     str1 = loop(i)
     str1 = str1.strip()
     str1 = str1[:-2]
@@ -124,7 +129,7 @@ for i in range(10, 21):  # vòng lăp chính
 
     print(str1)
     x = np.append(x, i)  # thêm T vào mảng trục x
-print("best result {}".format(str_result))
+print("best result: {}\ntcp: {}".format(str_result, best_result))
 # end_time = time.time()  # kết thúc bộ đếm h
 print('Time elapsed (hh:mm:ss.ms) {}'.format(datetime.now() - start_time))
 # ve do thi
